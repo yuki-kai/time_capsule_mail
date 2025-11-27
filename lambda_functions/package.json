@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build": "esbuild src/**/*.ts --minify --sourcemap --platform=node --target=es2020 --outdir=dist --format=cjs"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.159",
+    "@types/node": "^24.10.1",
+    "esbuild": "^0.27.0",
+    "typescript": "^5.9.3"
+  }
+}
