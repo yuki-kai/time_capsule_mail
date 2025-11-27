@@ -4,7 +4,7 @@ variable "env" {
   default     = "stage"
 }
 
-variable "apigateway_endpoint" {
-  description = "API Gatewayのエンドポイント"
+variable "cloudfront_url" {
+  description = "CloudFrontのURL"
   type        = string
 }

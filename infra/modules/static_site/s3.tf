@@ -47,7 +47,7 @@ locals {
   build_files = fileset("../../../website/build", "**/*")
 }
 
-resource "aws_s3_object" "website_files" {
+resource "aws_s3_object" "index_html" {
   bucket = aws_s3_bucket.website.bucket
 
   # filesetで取得したファイルパスのセットに対してループ
@@ -75,4 +75,30 @@ resource "aws_s3_object" "website_files" {
   )
 
   depends_on = [aws_s3_bucket_policy.bucket_policy]
+}
+
+# API Gatewayのエンドポイントを取得するためのS3オブジェクト
+resource "aws_s3_bucket" "api_gateway_endpoint_url" {
+  bucket = "${var.env}-api-gateway-endpoint-url"
+}
+
+resource "aws_s3_object" "config_js" {
+  bucket       = aws_s3_bucket.website.id
+  key          = "config.js"
+  content_type = "application/javascript"
+
+  # Heredoc構文でJavaScriptコードを記述し、Terraform属性を補間
+  content = <<-EOT
+    const AppConfig = {
+      API_ENDPOINT: "${var.apigateway_endpoint}"
+    };
+    
+    // グローバルスコープに公開
+    window.AppConfig = AppConfig; 
+  EOT
+
+  depends_on = [
+    var.apigateway_endpoint,
+    aws_s3_bucket_policy.bucket_policy,
+  ]
 }

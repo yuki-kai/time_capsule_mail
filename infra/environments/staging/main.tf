@@ -16,5 +16,18 @@ provider "aws" {
 module "website" {
   source = "../../modules/static_site"
 
-  env = "stage"
+  env                 = "stage"
+  apigateway_endpoint = module.request_schedule_lambda.apigateway_endpoint
+}
+
+module "request_schedule_lambda" {
+  source = "../../modules"
+
+  env            = "stage"
+  cloudfront_url = module.website.cloudfront_url
+}
+
+output "website_url" {
+  description = "WebサイトのURL"
+  value       = module.website.cloudfront_url
 }
