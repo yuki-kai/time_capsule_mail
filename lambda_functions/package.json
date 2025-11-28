@@ -7,5 +7,8 @@
     "@types/node": "^24.10.1",
     "esbuild": "^0.27.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-scheduler": "^3.940.0"
   }
 }

@@ -8,3 +8,8 @@ variable "cloudfront_url" {
   description = "CloudFrontのURL"
   type        = string
 }
+
+variable "account_id" {
+  description = ""
+  type        = string
+}

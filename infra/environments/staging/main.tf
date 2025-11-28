@@ -13,6 +13,8 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
+data "aws_caller_identity" "current" {}
+
 module "website" {
   source = "../../modules/static_site"
 
@@ -25,6 +27,7 @@ module "request_schedule_lambda" {
 
   env            = "stage"
   cloudfront_url = module.website.cloudfront_url
+  account_id     = data.aws_caller_identity.current.account_id
 }
 
 output "website_url" {

@@ -6,13 +6,19 @@ function App() {
   const handleClick = async () => {
     const apiEndpoint = (window as any).AppConfig.API_ENDPOINT;
     try {
+      // 現在時刻の3分後を取得
+      const scheduledAt = new Date(Date.now() + 3 * 60 * 1000).toISOString();
+
       const response = await fetch(apiEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: 'Hello from the frontend!',
+          title: 'タイトル',
+          body: '本文',
+          email: 'issi0430bjc@gmail.com',
+          scheduledAt,
         }),
       });
 
