@@ -9,6 +9,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@aws-sdk/client-scheduler": "^3.940.0"
+    "@aws-sdk/client-scheduler": "^3.940.0",
+    "@aws-sdk/client-ses": "^3.940.0"
   }
 }
