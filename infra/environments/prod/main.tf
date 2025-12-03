@@ -13,8 +13,24 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
+data "aws_caller_identity" "current" {}
+
 module "website" {
   source = "../../modules/static_site"
 
   env = "prod"
+  apigateway_endpoint = module.request_schedule_lambda.apigateway_endpoint
+}
+
+module "request_schedule_lambda" {
+  source = "../../modules"
+
+  env            = "prod"
+  cloudfront_url = module.website.cloudfront_url
+  account_id     = data.aws_caller_identity.current.account_id
+}
+
+output "website_url" {
+  description = "WebサイトのURL"
+  value       = module.website.cloudfront_url
 }
