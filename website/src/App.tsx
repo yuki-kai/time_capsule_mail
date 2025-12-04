@@ -11,6 +11,9 @@ type Values = {
 
 const regexpEmail = /^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/;
 
+const MAX_TITLE_LENGTH = 50;
+const MAX_BODY_LENGTH = 1000;
+
 const getDateAfterYear = (yearsLater: number) => {
   const now = new Date();
   now.setFullYear(now.getFullYear() + yearsLater);
@@ -71,8 +74,12 @@ function App() {
   // メールアドレスが有効かどうかを判定する変数
   const isEmailValid = values.email === '' || regexpEmail.test(values.email);
 
+  // タイトルとボディの文字数が有効かどうかを判定する変数
+  const isTitleValid = values.title.length <= MAX_TITLE_LENGTH;
+  const isBodyValid = values.body.length <= MAX_BODY_LENGTH;
+
   // フォームが送信可能かどうかを判定する変数
-  const isSubmittable = values.title !== '' && values.body !== '' && regexpEmail.test(values.email);
+  const isSubmittable = values.title !== '' && values.body !== '' && regexpEmail.test(values.email) && isTitleValid && isBodyValid;
 
   return (
     <section>
@@ -88,6 +95,8 @@ function App() {
             fullWidth
             value={values.title}
             onChange={handleChange}
+            error={!isTitleValid}
+            helperText={`${values.title.length}/${MAX_TITLE_LENGTH}文字${!isTitleValid ? ' (上限を超えています)' : ''}`}
           />
           <TextField
             name="body"
@@ -100,6 +109,8 @@ function App() {
             fullWidth
             value={values.body}
             onChange={handleChange}
+            error={!isBodyValid}
+            helperText={`${values.body.length}/${MAX_BODY_LENGTH}文字${!isBodyValid ? ' (上限を超えています)' : ''}`}
           />
           <FormControl fullWidth variant="filled" margin="dense">
             <InputLabel id="scheduledAt-label">送信日時</InputLabel>
