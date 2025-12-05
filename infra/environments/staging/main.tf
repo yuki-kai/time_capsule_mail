@@ -30,6 +30,13 @@ module "request_schedule_lambda" {
   account_id     = data.aws_caller_identity.current.account_id
 }
 
+module "mail" {
+  source = "../../modules/mail"
+
+  env         = "stage"
+  domain_name = "yuki-fourseasons.com"
+}
+
 output "website_url" {
   description = "WebサイトのURL"
   value       = module.website.cloudfront_url

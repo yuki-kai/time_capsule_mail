@@ -17,7 +17,7 @@ export const handler = async (event: ScheduledEvent) => {
 
   try {
     const command = new SendEmailCommand({
-      Source: email, // TODO: noreply@hoge.com的な固定のメールアドレスを取得して設定する
+      Source: "time-capsule@yuki-fourseasons.com",
       Destination: { ToAddresses: [email] },
       Message: {
         Subject: { Data: title },
