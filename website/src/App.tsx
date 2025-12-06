@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Box, Button, Container, FormControl, InputLabel, MenuItem, Modal, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
 type Values = {
@@ -30,6 +30,7 @@ function App() {
     email: "",
     scheduledAt: dateOptions[0].value,
   });
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
@@ -63,9 +64,14 @@ function App() {
 
       const data = await response.json();
       console.log('Success:', data);
+      setModalOpen(true);
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
   };
 
   // メールアドレスが有効かどうかを判定する変数
@@ -143,6 +149,36 @@ function App() {
           </Button>
         </Box>
       </Container>
+      <Modal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <Typography id="modal-title" variant="h6" component="h2" gutterBottom>
+            送信完了
+          </Typography>
+          <Typography id="modal-description" sx={{ mb: 2 }}>
+            メールの送信予約が完了しました。
+          </Typography>
+          <Button variant="contained" onClick={handleCloseModal} fullWidth>
+            閉じる
+          </Button>
+        </Box>
+      </Modal>
     </section>
   );
 }
