@@ -15,10 +15,18 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
+# common環境のstateからルートドメイン情報を参照
+data "terraform_remote_state" "common" {
+  backend = "local"
+  config = {
+    path = "../common/terraform.tfstate"
+  }
+}
+
 module "website" {
   source = "../../modules/static_site"
 
-  env = "prod"
+  env                 = "prod"
   apigateway_endpoint = module.request_schedule_lambda.apigateway_endpoint
 }
 
@@ -28,6 +36,14 @@ module "request_schedule_lambda" {
   env            = "prod"
   cloudfront_url = module.website.cloudfront_url
   account_id     = data.aws_caller_identity.current.account_id
+}
+
+module "mail" {
+  source = "../../modules/mail"
+
+  env                 = "prod"
+  root_domain_name    = data.terraform_remote_state.common.outputs.root_domain_name
+  root_domain_zone_id = data.terraform_remote_state.common.outputs.root_domain_zone_id
 }
 
 output "website_url" {

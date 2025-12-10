@@ -3,7 +3,13 @@ variable "env" {
   type        = string
   default     = "stage"
 }
-variable "domain_name" {
-  description = "ドメイン名"
+
+variable "root_domain_name" {
+  description = "ルートドメイン名"
+  type        = string
+}
+
+variable "root_domain_zone_id" {
+  description = "ルートドメイン名"
   type        = string
 }

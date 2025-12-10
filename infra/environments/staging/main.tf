@@ -15,6 +15,14 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
+# common環境のstateからルートドメイン情報を参照
+data "terraform_remote_state" "common" {
+  backend = "local"
+  config = {
+    path = "../common/terraform.tfstate"
+  }
+}
+
 module "website" {
   source = "../../modules/static_site"
 
@@ -33,8 +41,9 @@ module "request_schedule_lambda" {
 module "mail" {
   source = "../../modules/mail"
 
-  env         = "stage"
-  domain_name = "yuki-fourseasons.com"
+  env                 = "stage"
+  root_domain_name    = data.terraform_remote_state.common.outputs.root_domain_name
+  root_domain_zone_id = data.terraform_remote_state.common.outputs.root_domain_zone_id
 }
 
 output "website_url" {
