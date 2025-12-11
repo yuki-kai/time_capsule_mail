@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import Modal from './components/Modal';
 
 type Values = {
   title: string;
@@ -18,18 +19,33 @@ const getDateAfterYear = (yearsLater: number) => {
 };
 
 const dateOptions = [
+  { label: 'テスト用今すぐ', value: new Date().toISOString() },
   { label: '1年後', value: getDateAfterYear(1) },
   { label: '5年後', value: getDateAfterYear(5) },
   { label: '10年後', value: getDateAfterYear(10) },
 ];
 
+const initialValues: Values = {
+  title: "",
+  body: "",
+  email: "",
+  scheduledAt: dateOptions[0].value,
+};
+
+type ModalState = {
+  isOpen: boolean;
+  title?: ReactNode;
+  description?: ReactNode;
+  content?: ReactNode;
+  actions?: ReactNode;
+};
+
 function App() {
-  const [values, setValues] = useState<Values>({
-    title: "",
-    body: "",
-    email: "",
-    scheduledAt: dateOptions[0].value,
+  const [values, setValues] = useState<Values>(initialValues);
+  const [modalContent, setModalContent] = useState<ModalState>({
+    isOpen: false,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
@@ -42,6 +58,8 @@ function App() {
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return; // 二重送信防止
+    setIsSubmitting(true);
     try {
       const apiEndpoint = (window as any).AppConfig.API_ENDPOINT;
       const response = await fetch(apiEndpoint, {
@@ -63,9 +81,34 @@ function App() {
 
       const data = await response.json();
       console.log('Success:', data);
+      const scheduledDate = new Date(values.scheduledAt);
+      const dateTimeFormat = new Intl.DateTimeFormat('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+      setModalContent({
+        isOpen: true,
+        title: '送信完了',
+        description: `${dateTimeFormat.format(scheduledDate)}の今日、あなたにメールが届きます！`,
+      });
+      setValues({ ...initialValues });
     } catch (error) {
       console.error('Error:', error);
+      setModalContent({
+        isOpen: true,
+        title: '送信に失敗しました',
+        description: '時間をおいて再度お試しください。',
+      });
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  const handleCloseModal = () => {
+    setModalContent({
+      isOpen: false,
+    });
   };
 
   // メールアドレスが有効かどうかを判定する変数
@@ -136,13 +179,22 @@ function App() {
             variant="contained"
             size="large"
             endIcon={<SendIcon />}
-            disabled={!isSubmittable}
+            disabled={!isSubmittable || isSubmitting}
             onClick={handleSubmit}
           >
             メール送信予約
           </Button>
         </Box>
       </Container>
+      <Modal
+        open={modalContent.isOpen || false}
+        onClose={handleCloseModal}
+        title={modalContent.title}
+        description={modalContent.description}
+        actions={modalContent.actions}
+      >
+        {modalContent.content}
+      </Modal>
     </section>
   );
 }
