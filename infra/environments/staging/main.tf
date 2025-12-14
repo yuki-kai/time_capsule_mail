@@ -38,14 +38,6 @@ module "request_schedule_lambda" {
   account_id     = data.aws_caller_identity.current.account_id
 }
 
-module "mail" {
-  source = "../../modules/mail"
-
-  env                 = "stage"
-  root_domain_name    = data.terraform_remote_state.common.outputs.root_domain_name
-  root_domain_zone_id = data.terraform_remote_state.common.outputs.root_domain_zone_id
-}
-
 output "website_url" {
   description = "WebサイトのURL"
   value       = module.website.cloudfront_url
