@@ -13,6 +13,12 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
+# us-east-1 (バージニア北部) のエイリアスプロバイダ（ACM for CloudFront用）
+provider "aws" {
+  alias  = "virginia"
+  region = "us-east-1"
+}
+
 data "aws_caller_identity" "current" {}
 
 # common環境のstateからルートドメイン情報を参照
@@ -28,6 +34,13 @@ module "website" {
 
   env                 = "stage"
   apigateway_endpoint = module.request_schedule_lambda.apigateway_endpoint
+
+  website_domain_name = "www-stage.time-capsule-mail.yuki-fourseasons.com"
+
+  providers = {
+    aws          = aws
+    aws.virginia = aws.virginia
+  }
 }
 
 module "request_schedule_lambda" {

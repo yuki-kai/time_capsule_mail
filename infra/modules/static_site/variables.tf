@@ -8,3 +8,8 @@ variable "apigateway_endpoint" {
   description = "API Gatewayのエンドポイント"
   type        = string
 }
+
+variable "website_domain_name" {
+  description = "CloudFrontのカスタムドメイン（ACMおよびaliasesに使用）"
+  type        = string
+}
