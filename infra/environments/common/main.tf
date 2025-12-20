@@ -17,6 +17,54 @@ locals {
   domain_name = "yuki-fourseasons.com"
 }
 
+# us-east-1 (バージニア北部) のエイリアスプロバイダ
+provider "aws" {
+  alias  = "virginia"
+  region = "us-east-1"
+}
+
+resource "aws_acm_certificate" "prod" {
+  domain_name       = "www.time-capsule-mail.yuki-fourseasons.com"
+  validation_method = "DNS"
+  provider          = aws.virginia
+}
+
+output "prod_domain" {
+  description = "prod環境のドメイン名"
+  value       = aws_acm_certificate.prod.arn
+}
+
+output "acm_validation_prod_records" {
+  description = "レンタルサーバーのDNS管理画面に登録するCNAMEレコード情報"
+  value = [
+    for dvo in aws_acm_certificate.prod.domain_validation_options : {
+      "CNAME名" = dvo.resource_record_name
+      "CNAME値" = dvo.resource_record_value
+    }
+  ]
+}
+
+resource "aws_acm_certificate" "stage" {
+  domain_name       = "www.stage.time-capsule-mail.yuki-fourseasons.com"
+  validation_method = "DNS"
+  provider          = aws.virginia
+}
+
+output "stage_domain" {
+  description = "prod環境のドメイン名"
+  value       = aws_acm_certificate.stage.arn
+}
+
+output "acm_validation_stage_records" {
+  description = "レンタルサーバーのDNS管理画面に登録するCNAMEレコード情報"
+  value = [
+    for dvo in aws_acm_certificate.stage.domain_validation_options : {
+      "CNAME名" = dvo.resource_record_name
+      "CNAME値" = dvo.resource_record_value
+    }
+  ]
+}
+
 # Route53のルートのホストゾーンを作成
 resource "aws_route53_zone" "main" {
   name = local.domain_name

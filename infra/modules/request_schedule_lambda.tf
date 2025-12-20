@@ -12,12 +12,13 @@ resource "aws_lambda_function" "create_schedule" {
   role             = aws_iam_role.create_schedule_lambda_role.arn
   runtime          = "nodejs22.x"
   handler          = "createSchedule.handler"
+  publish          = true
 
   environment {
     variables = {
-      ALLOWED_ORIGIN     = var.cloudfront_url
-      TARGET_LAMBDA_ARN  = aws_lambda_function.create_ses.arn
-      SCHEDULER_ROLE_ARN = aws_iam_role.scheduler_invoke_lambda_role.arn
+      ALLOWED_CORS_ORIGIN = "https://${var.website_domain_name}"
+      TARGET_LAMBDA_ARN   = aws_lambda_function.create_ses.arn
+      SCHEDULER_ROLE_ARN  = aws_iam_role.scheduler_invoke_lambda_role.arn
     }
   }
 }

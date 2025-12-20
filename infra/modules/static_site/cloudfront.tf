@@ -2,12 +2,6 @@ locals {
   origin_id = "timeCapsuleMailOrigin"
 }
 
-resource "aws_acm_certificate" "cert" {
-  domain_name       = var.website_domain_name
-  validation_method = "DNS"
-  provider          = aws.virginia
-}
-
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name              = aws_s3_bucket.website.bucket_regional_domain_name
@@ -16,7 +10,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   enabled             = true # ディストリビューションを有効化
-  aliases             = [var.website_domain_name]
+  aliases             = ["${var.website_domain_name}"]
   is_ipv6_enabled     = true # IPv6 を有効化
   comment             = "CloudFront Distribution for S3 bucket in Tokyo region"
   default_root_object = "index.html" # ルートにアクセスした際のデフォルトファイル
@@ -50,9 +44,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   viewer_certificate {
     cloudfront_default_certificate = false
-    acm_certificate_arn            = aws_acm_certificate.cert.arn
+    acm_certificate_arn            = var.env_aws_acm_arn
     ssl_support_method             = "sni-only"
-    minimum_protocol_version       = "TLSv1"
+    minimum_protocol_version       = "TLSv1.2_2021"
   }
 }
 

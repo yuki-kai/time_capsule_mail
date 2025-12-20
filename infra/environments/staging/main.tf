@@ -29,13 +29,19 @@ data "terraform_remote_state" "common" {
   }
 }
 
+locals {
+  website_domain_name = "www.stage.time-capsule-mail.yuki-fourseasons.com"
+}
+
 module "website" {
   source = "../../modules/static_site"
 
   env                 = "stage"
   apigateway_endpoint = module.request_schedule_lambda.apigateway_endpoint
 
-  website_domain_name = "www-stage.time-capsule-mail.yuki-fourseasons.com"
+  website_domain_name = local.website_domain_name
+  hosted_zone_id      = data.terraform_remote_state.common.outputs.root_domain_zone_id
+  env_aws_acm_arn     = data.terraform_remote_state.common.outputs.stage_domain
 
   providers = {
     aws          = aws
@@ -46,9 +52,10 @@ module "website" {
 module "request_schedule_lambda" {
   source = "../../modules"
 
-  env            = "stage"
-  cloudfront_url = module.website.cloudfront_url
-  account_id     = data.aws_caller_identity.current.account_id
+  env                 = "stage"
+  cloudfront_url      = module.website.cloudfront_url
+  account_id          = data.aws_caller_identity.current.account_id
+  website_domain_name = local.website_domain_name
 }
 
 output "website_url" {

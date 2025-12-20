@@ -13,3 +13,14 @@ variable "website_domain_name" {
   description = "CloudFrontのカスタムドメイン（ACMおよびaliasesに使用）"
   type        = string
 }
+
+variable "hosted_zone_id" {
+  description = "証明書DNS検証用にレコードを作成するRoute53 Hosted ZoneのID"
+  type        = string
+}
+
+variable "env_aws_acm_arn" {
+  description = "カスタム証明書のARN"
+  type        = string
+  default     = null
+}

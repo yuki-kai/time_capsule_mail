@@ -67,7 +67,7 @@ resource "aws_api_gateway_integration_response" "options_200" {
   response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST'",
-    "method.response.header.Access-Control-Allow-Origin"  = "'${var.cloudfront_url}'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'https://${var.website_domain_name}'"
   }
 }
 

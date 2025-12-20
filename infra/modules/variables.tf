@@ -13,3 +13,8 @@ variable "account_id" {
   description = ""
   type        = string
 }
+
+variable "website_domain_name" {
+  description = "CloudFrontのカスタムドメイン（ACMおよびaliasesに使用）"
+  type        = string
+}

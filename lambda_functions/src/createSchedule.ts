@@ -2,7 +2,7 @@ import type { APIGatewayProxyResult, APIGatewayEvent } from "aws-lambda";
 import { SchedulerClient, CreateScheduleCommand, FlexibleTimeWindowMode } from "@aws-sdk/client-scheduler";
 
 const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGIN || "*",
+  "Access-Control-Allow-Origin": process.env.ALLOWED_CORS_ORIGIN || "*",
   "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
   "Access-Control-Allow-Methods": "OPTIONS,POST"
 };
