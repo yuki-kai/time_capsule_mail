@@ -120,7 +120,7 @@ function App() {
   return (
     <section>
       <Container maxWidth="sm">
-        <h2>タイムカプセルメール</h2>
+        <h2 className="page-title">タイムカプセルメール</h2>
         <Box component="form" noValidate autoComplete="off">
           <TextField
             name="title"
@@ -131,6 +131,10 @@ function App() {
             fullWidth
             value={values.title}
             onChange={handleChange}
+            sx={{
+              backgroundColor: "#FFFFE0",
+              opacity: 0.7,
+            }}
           />
           <TextField
             name="body"
@@ -143,6 +147,10 @@ function App() {
             fullWidth
             value={values.body}
             onChange={handleChange}
+            sx={{
+              backgroundColor: "#FFFFE0",
+              opacity: 0.7,
+            }}
           />
           <FormControl fullWidth variant="filled" margin="dense">
             <InputLabel id="scheduledAt-label">送信日時</InputLabel>
@@ -153,6 +161,25 @@ function App() {
               value={values.scheduledAt}
               onChange={handleDateChange}
               label="送信日時"
+              sx={{
+                backgroundColor: "#FFFFE0",
+                opacity: 0.7,
+                '&:hover': {
+                  backgroundColor: "#E8E8E8",
+                },
+                '&.Mui-focused': {
+                  backgroundColor: "#E8E8E8",
+                },
+                '& .MuiSelect-select': {
+                  backgroundColor: 'transparent',
+                },
+                '& .MuiSelect-select:focus': {
+                  backgroundColor: 'transparent',
+                },
+                '& .MuiFilledInput-input': {
+                  backgroundColor: 'transparent',
+                },
+              }}
             >
               {dateOptions.map(option => (
                 <MenuItem key={option.value} value={option.value}>
@@ -172,6 +199,10 @@ function App() {
             onChange={handleChange}
             error={!isEmailValid}
             helperText={!isEmailValid ? "Incorrect Email address format." : null}
+            sx={{
+              backgroundColor: "#FFFFE0",
+              opacity: 0.7,
+            }}
           />
           <br />
           <br />
@@ -181,6 +212,7 @@ function App() {
             endIcon={<SendIcon />}
             disabled={!isSubmittable || isSubmitting}
             onClick={handleSubmit}
+            className="submitButton"
           >
             メール送信予約
           </Button>

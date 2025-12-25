@@ -5,9 +5,27 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #8A2BE2 0%, #66CDAA 80%);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.page-title {
+  color: #FFFFE0;
+  text-shadow: 1px 1px 0 #ccc, 2px 2px 0 #bbb;
+}
+
+/* Submitボタンのカラー指定 */
+.submitButton {
+  color: #F5F5F5;
+}
+.submitButton.MuiButton-contained {
+  background-color: #003366;
+}
+.submitButton.MuiButton-contained:hover {
+  background-color: #003366;
+}
+.submitButton.MuiButton-contained.Mui-disabled {
+  background-color: #003366;
+  color: #F5F5F5;
+  opacity: 0.6;
 }
