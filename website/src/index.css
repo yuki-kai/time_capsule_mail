@@ -11,7 +11,14 @@ body {
 
 .page-title {
   color: #FFFFE0;
+  font-size: 36px;
   text-shadow: 1px 1px 0 #ccc, 2px 2px 0 #bbb;
+  text-align: center;
+}
+
+/* MUIのButtonは英文字が大文字になるので無効化 */
+.MuiButton-root {
+  text-transform: none !important;
 }
 
 /* Submitボタンのカラー指定 */
@@ -28,4 +35,9 @@ body {
   background-color: #003366;
   color: #F5F5F5;
   opacity: 0.6;
+}
+
+p {
+  color: #FFFFE0;
+  font-size: 18px;
 }

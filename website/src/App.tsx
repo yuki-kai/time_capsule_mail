@@ -19,10 +19,10 @@ const getDateAfterYear = (yearsLater: number) => {
 };
 
 const dateOptions = [
-  { label: 'テスト用今すぐ', value: new Date().toISOString() },
-  { label: '1年後', value: getDateAfterYear(1) },
-  { label: '5年後', value: getDateAfterYear(5) },
-  { label: '10年後', value: getDateAfterYear(10) },
+  { label: 'Now', value: new Date().toISOString() },
+  { label: '1 year later', value: getDateAfterYear(1) },
+  { label: '5 years later', value: getDateAfterYear(5) },
+  { label: '10 years later', value: getDateAfterYear(10) },
 ];
 
 const initialValues: Values = {
@@ -120,12 +120,22 @@ function App() {
   return (
     <section>
       <Container maxWidth="sm">
-        <h2 className="page-title">タイムカプセルメール</h2>
+        <h2 className="page-title">Time Capsule Mail</h2>
+        <p>
+          What would you say to your future self?
+        </p>
+        <p>
+          Joys, worries, and promises—capture them all before the feelings of today begin to fade.
+          This service delivers your message to the future of your choice.
+        </p>
+        <p>
+          It is a special gift from your past self, arriving exactly when you need it most.
+        </p>
         <Box component="form" noValidate autoComplete="off">
           <TextField
             name="title"
             id="title"
-            label="タイトル"
+            label="title"
             variant="filled"
             margin="dense"
             fullWidth
@@ -139,7 +149,7 @@ function App() {
           <TextField
             name="body"
             id="body"
-            label="メッセージ"
+            label="message"
             multiline
             minRows={12}
             variant="filled"
@@ -153,14 +163,14 @@ function App() {
             }}
           />
           <FormControl fullWidth variant="filled" margin="dense">
-            <InputLabel id="scheduledAt-label">送信日時</InputLabel>
+            <InputLabel id="scheduledAt-label">scheduled date and time</InputLabel>
             <Select
               labelId="scheduledAt-label"
               id="scheduledAt"
               name="scheduledAt"
               value={values.scheduledAt}
               onChange={handleDateChange}
-              label="送信日時"
+              label="scheduled date and time"
               sx={{
                 backgroundColor: "#FFFFE0",
                 opacity: 0.7,
@@ -191,7 +201,7 @@ function App() {
           <TextField
             name="email"
             id="email"
-            label="メールアドレス"
+            label="email"
             variant="filled"
             margin="dense"
             fullWidth
@@ -214,7 +224,7 @@ function App() {
             onClick={handleSubmit}
             className="submitButton"
           >
-            メール送信予約
+            Send The Time Capsule Mail
           </Button>
         </Box>
       </Container>
