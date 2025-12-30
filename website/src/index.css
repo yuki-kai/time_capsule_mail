@@ -1,12 +1,23 @@
+html {
+  background: #8A2BE2;
+}
+
 body {
   margin: 0;
+  overscroll-behavior: none;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #8A2BE2 0%, #66CDAA 80%);
+  background: linear-gradient(
+    to bottom,
+    #8A2BE2 0%,
+    #66CDAA 50%,
+    #66CDAA 80%,
+    #8A2BE2 100%
+  );
 }
 
 .page-title {
