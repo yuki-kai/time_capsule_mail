@@ -52,3 +52,28 @@ p {
   color: #FFFFE0;
   font-size: 18px;
 }
+
+/* Appセクションにロゴ背景を敷く（CSSのみ） */
+.app-bg {
+  position: relative;
+  min-height: 100vh;
+}
+.app-bg > * {
+  position: relative;
+  z-index: 1;
+}
+.app-bg::before {
+  content: "";
+  position: fixed;
+  top: var(--logo-top, 30%);
+  left: var(--logo-left, -50%);
+  right: var(--logo-right, 0);
+  bottom: var(--logo-bottom, 0);
+  background-image: url('../public/logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: var(--logo-opacity, 0.2);
+  pointer-events: none;
+  z-index: 0;
+}

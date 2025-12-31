@@ -118,8 +118,8 @@ function App() {
   const isSubmittable = values.title !== '' && values.body !== '' && regexpEmail.test(values.email);
 
   return (
-    <section>
-      <Container maxWidth="sm">
+    <section className="app-bg">
+      <Container maxWidth="sm" sx={{ mb: 12 }}>
         <h2 className="page-title">Time Capsule Mail</h2>
         <p>
           What would you say to your future self?
