@@ -1,7 +1,7 @@
 import { ReactNode, useState } from 'react';
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import Modal from './components/Modal';
+import { useNavigate } from 'react-router-dom';
 
 type Values = {
   title: string;
@@ -32,19 +32,9 @@ const initialValues: Values = {
   scheduledAt: dateOptions[0].value,
 };
 
-type ModalState = {
-  isOpen: boolean;
-  title?: ReactNode;
-  description?: ReactNode;
-  content?: ReactNode;
-  actions?: ReactNode;
-};
-
 function App() {
+  const navigate = useNavigate();
   const [values, setValues] = useState<Values>(initialValues);
-  const [modalContent, setModalContent] = useState<ModalState>({
-    isOpen: false,
-  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,34 +71,13 @@ function App() {
 
       const data = await response.json();
       console.log('Success:', data);
-      const scheduledDate = new Date(values.scheduledAt);
-      const dateTimeFormat = new Intl.DateTimeFormat('ja-JP', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-      setModalContent({
-        isOpen: true,
-        title: '送信完了',
-        description: `${dateTimeFormat.format(scheduledDate)}の今日、あなたにメールが届きます！`,
-      });
-      setValues({ ...initialValues });
+      navigate('/thanks', { state: { scheduledAt: values.scheduledAt } });
     } catch (error) {
       console.error('Error:', error);
-      setModalContent({
-        isOpen: true,
-        title: '送信に失敗しました',
-        description: '時間をおいて再度お試しください。',
-      });
+      alert("An error occurred while submitting the form. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleCloseModal = () => {
-    setModalContent({
-      isOpen: false,
-    });
   };
 
   // メールアドレスが有効かどうかを判定する変数
@@ -228,15 +197,6 @@ function App() {
           </Button>
         </Box>
       </Container>
-      <Modal
-        open={modalContent.isOpen || false}
-        onClose={handleCloseModal}
-        title={modalContent.title}
-        description={modalContent.description}
-        actions={modalContent.actions}
-      >
-        {modalContent.content}
-      </Modal>
     </section>
   );
 }
