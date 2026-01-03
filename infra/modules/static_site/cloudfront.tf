@@ -48,6 +48,19 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     ssl_support_method             = "sni-only"
     minimum_protocol_version       = "TLSv1.2_2021"
   }
+
+  custom_error_response {
+    error_code             = 403
+    response_code          = 200
+    response_page_path     = "/"
+    error_caching_min_ttl  = 0
+  }
+  custom_error_response {
+    error_code             = 404
+    response_code          = 200
+    response_page_path     = "/"
+    error_caching_min_ttl  = 0
+  }
 }
 
 // OAC
