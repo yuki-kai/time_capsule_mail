@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Container, Box } from '@mui/material';
 import { useLocation, Link } from 'react-router-dom';
+import GoogleAdsense from './GoogleAdsense';
 
 const Thanks: React.FC = () => {
   const location = useLocation();
@@ -18,12 +19,17 @@ const Thanks: React.FC = () => {
 
   return (
     <section className="app-bg">
-      <Container maxWidth="sm" sx={{ py: 8 }}>
+      <Container maxWidth="sm" sx={{
+        paddingTop: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+      }}>
         <h2 className="page-title">Thank you!</h2>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <p>{message}</p>
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 8 }}>
           <Button
             component={Link}
             to="/"
@@ -32,6 +38,15 @@ const Thanks: React.FC = () => {
           >
             Back to Home
           </Button>
+        </Box>
+        {/* 本番環境のみ広告を表示（画面下部に固定）*/}
+        <Box
+          sx={{
+            mt: 'auto',
+            textAlign: 'center',
+          }}
+        >
+          <GoogleAdsense />
         </Box>
       </Container>
     </section>
