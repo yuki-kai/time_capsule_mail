@@ -12,12 +12,11 @@ interface EmailSendRecord {
 }
 
 /**
- * Get the current JST date string (YYYY-MM-DD)
+ * Helper function to convert a Date to JST date string (YYYY-MM-DD)
+ * Note: Japan doesn't observe DST, so a fixed UTC+9 offset is correct
  */
-function getCurrentJSTDate(): string {
-  const now = new Date();
-  // Convert to JST by adding 9 hours
-  const jstTime = new Date(now.getTime() + JST_OFFSET_HOURS * 60 * 60 * 1000);
+function toJSTDateString(date: Date): string {
+  const jstTime = new Date(date.getTime() + JST_OFFSET_HOURS * 60 * 60 * 1000);
   const year = jstTime.getUTCFullYear();
   const month = String(jstTime.getUTCMonth() + 1).padStart(2, '0');
   const day = String(jstTime.getUTCDate()).padStart(2, '0');
@@ -25,15 +24,17 @@ function getCurrentJSTDate(): string {
 }
 
 /**
+ * Get the current JST date string (YYYY-MM-DD)
+ */
+function getCurrentJSTDate(): string {
+  return toJSTDateString(new Date());
+}
+
+/**
  * Get the JST date string from a timestamp
  */
 function getJSTDateFromTimestamp(timestamp: number): string {
-  const date = new Date(timestamp);
-  const jstTime = new Date(date.getTime() + JST_OFFSET_HOURS * 60 * 60 * 1000);
-  const year = jstTime.getUTCFullYear();
-  const month = String(jstTime.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(jstTime.getUTCDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return toJSTDateString(new Date(timestamp));
 }
 
 /**
