@@ -1,7 +1,8 @@
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router-dom';
+import { canSendEmail, recordEmailSent, getMaxEmailsPerDay } from './utils/rateLimiter';
 
 type Values = {
   title: string;
@@ -49,6 +50,13 @@ function App() {
 
   const handleSubmit = async () => {
     if (isSubmitting) return; // 二重送信防止
+    
+    // Check rate limit before proceeding
+    if (!canSendEmail()) {
+      alert(`You have reached the daily limit of ${getMaxEmailsPerDay()} emails. Please try again tomorrow (JST).`);
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
       const apiEndpoint = (window as any).AppConfig.API_ENDPOINT;
@@ -71,6 +79,10 @@ function App() {
 
       const data = await response.json();
       console.log('Success:', data);
+      
+      // Record successful email send for rate limiting
+      recordEmailSent();
+      
       navigate('/thanks', { state: { scheduledAt: values.scheduledAt } });
     } catch (error) {
       console.error('Error:', error);
