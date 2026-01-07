@@ -55,8 +55,8 @@ function App() {
   };
 
   const handleCloseDialog = useCallback(() => {
-    setAlertDialog({ ...alertDialog, open: false });
-  }, [alertDialog]);
+    setAlertDialog(prev => ({ ...prev, open: false }));
+  }, []);
 
   const handleSubmit = async () => {
     if (isSubmitting) return; // 二重送信防止
