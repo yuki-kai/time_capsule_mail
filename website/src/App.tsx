@@ -3,6 +3,7 @@ import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, Sele
 import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router-dom';
 import { canSendEmail, recordEmailSent, getMaxEmailsPerDay } from './utils/rateLimiter';
+import AlertDialog from './components/AlertDialog';
 
 type Values = {
   title: string;
@@ -37,6 +38,11 @@ function App() {
   const navigate = useNavigate();
   const [values, setValues] = useState<Values>(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [alertDialog, setAlertDialog] = useState<{ open: boolean; title: string; message: string }>({
+    open: false,
+    title: '',
+    message: '',
+  });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
@@ -53,7 +59,11 @@ function App() {
     
     // Check rate limit before proceeding
     if (!canSendEmail()) {
-      alert(`You have reached the daily limit of ${getMaxEmailsPerDay()} emails. Please try again tomorrow (JST).`);
+      setAlertDialog({
+        open: true,
+        title: 'Daily Limit Reached',
+        message: `You have reached the daily limit of ${getMaxEmailsPerDay()} emails. Please try again tomorrow (JST).`,
+      });
       return;
     }
     
@@ -86,7 +96,11 @@ function App() {
       navigate('/thanks', { state: { scheduledAt: values.scheduledAt } });
     } catch (error) {
       console.error('Error:', error);
-      alert("An error occurred while submitting the form. Please try again later.");
+      setAlertDialog({
+        open: true,
+        title: 'Error',
+        message: 'An error occurred while submitting the form. Please try again later.',
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -208,6 +222,12 @@ function App() {
             Send The Time Capsule Mail
           </Button>
         </Box>
+        <AlertDialog
+          open={alertDialog.open}
+          title={alertDialog.title}
+          message={alertDialog.message}
+          onClose={() => setAlertDialog({ ...alertDialog, open: false })}
+        />
       </Container>
     </section>
   );
