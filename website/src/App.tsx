@@ -12,6 +12,12 @@ type Values = {
   scheduledAt: string;
 }
 
+type AlertDialogState = {
+  open: boolean;
+  title: string;
+  message: string;
+}
+
 const regexpEmail = /^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/;
 
 const getDateAfterYear = (yearsLater: number) => {
@@ -38,7 +44,7 @@ function App() {
   const navigate = useNavigate();
   const [values, setValues] = useState<Values>(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [alertDialog, setAlertDialog] = useState<{ open: boolean; title: string; message: string }>({
+  const [alertDialog, setAlertDialog] = useState<AlertDialogState>({
     open: false,
     title: '',
     message: '',
