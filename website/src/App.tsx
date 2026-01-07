@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router-dom';
@@ -53,6 +53,10 @@ function App() {
   const handleDateChange = (event: SelectChangeEvent<string>) => {
     setValues({ ...values, scheduledAt: event.target.value });
   };
+
+  const handleCloseDialog = useCallback(() => {
+    setAlertDialog({ ...alertDialog, open: false });
+  }, [alertDialog]);
 
   const handleSubmit = async () => {
     if (isSubmitting) return; // 二重送信防止
@@ -226,7 +230,7 @@ function App() {
           open={alertDialog.open}
           title={alertDialog.title}
           message={alertDialog.message}
-          onClose={() => setAlertDialog({ ...alertDialog, open: false })}
+          onClose={handleCloseDialog}
         />
       </Container>
     </section>
