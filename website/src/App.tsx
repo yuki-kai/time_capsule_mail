@@ -1,14 +1,21 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router-dom';
 import { canSendEmail, recordEmailSent, getMaxEmailsPerDay } from './utils/rateLimiter';
+import AlertDialog from './components/AlertDialog';
 
 type Values = {
   title: string;
   body: string;
   email: string;
   scheduledAt: string;
+}
+
+type AlertDialogState = {
+  open: boolean;
+  title: string;
+  message: string;
 }
 
 const regexpEmail = /^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/;
@@ -37,6 +44,11 @@ function App() {
   const navigate = useNavigate();
   const [values, setValues] = useState<Values>(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [alertDialog, setAlertDialog] = useState<AlertDialogState>({
+    open: false,
+    title: '',
+    message: '',
+  });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
@@ -48,12 +60,20 @@ function App() {
     setValues({ ...values, scheduledAt: event.target.value });
   };
 
+  const handleCloseDialog = useCallback(() => {
+    setAlertDialog(prev => ({ ...prev, open: false }));
+  }, []);
+
   const handleSubmit = async () => {
     if (isSubmitting) return; // 二重送信防止
     
     // Check rate limit before proceeding
     if (!canSendEmail()) {
-      alert(`You have reached the daily limit of ${getMaxEmailsPerDay()} emails. Please try again tomorrow (JST).`);
+      setAlertDialog({
+        open: true,
+        title: 'Daily Limit Reached',
+        message: `You have reached the daily limit of ${getMaxEmailsPerDay()} emails. Please try again tomorrow (JST).`,
+      });
       return;
     }
     
@@ -86,7 +106,11 @@ function App() {
       navigate('/thanks', { state: { scheduledAt: values.scheduledAt } });
     } catch (error) {
       console.error('Error:', error);
-      alert("An error occurred while submitting the form. Please try again later.");
+      setAlertDialog({
+        open: true,
+        title: 'Error',
+        message: 'An error occurred while submitting the form. Please try again later.',
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -208,6 +232,12 @@ function App() {
             Send The Time Capsule Mail
           </Button>
         </Box>
+        <AlertDialog
+          open={alertDialog.open}
+          title={alertDialog.title}
+          message={alertDialog.message}
+          onClose={handleCloseDialog}
+        />
       </Container>
     </section>
   );
