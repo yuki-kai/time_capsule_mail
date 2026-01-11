@@ -40,7 +40,6 @@ module "website" {
   apigateway_endpoint = module.request_schedule_lambda.apigateway_endpoint
 
   website_domain_name = local.website_domain_name
-  hosted_zone_id      = data.terraform_remote_state.common.outputs.root_domain_zone_id
   env_aws_acm_arn     = data.terraform_remote_state.common.outputs.stage_domain
 
   providers = {
